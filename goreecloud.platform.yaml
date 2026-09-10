@@ -5,7 +5,7 @@ component:
   product_name: GoreeCloud Reader
   repository: GoreeCloud/goreecloud-reader
 lifecycle: development
-version: '0.0.1-foundation'
+version: '0.0.2-foundation'
 license: AGPL-3.0-or-later
 supported_platforms:
 - web
@@ -87,7 +87,15 @@ continuity:
     required: true
     requirements:
     - Preserve original media and understandable portable metadata/state formats wherever practical.
-external_dependencies: []
+external_dependencies:
+- name: Gradle
+  required: true
+  status: development-build
+  version: 8.11.1
+- name: Android Gradle Plugin
+  required: true
+  status: development-build
+  version: 8.10.1
 compatibility:
   platform_contract: '0.2'
   glaze_ui_required: 1.3.0
@@ -98,7 +106,9 @@ compatibility:
   - goreecloud-reader-web-foundation
   - goreecloud-reader-android-foundation
 evidence:
-  acceptance_tests: []
+  acceptance_tests:
+  - .github/workflows/validate.yml
+  - docs/ANDROID-BUILD.md
   release: []
 conformance:
   status: nonconformant
@@ -107,6 +117,7 @@ conformance:
   - README.md
   - FEATURES.md
   - docs/ARCHITECTURE.md
+  - docs/ANDROID-BUILD.md
   - docs/GLAZE-UI-ADOPTION.md
   - docs/PRIVACY.md
   - privacy/privacy-shield.application-manifest.json
@@ -114,5 +125,5 @@ conformance:
   - Real personal-library ingestion, persistence, reading, and audiobook playback are not implemented.
   - Runtime Privacy Shield, Wardveil Security, Everkeep, GoreeCloud Identity, GoreeCloud Mesh, and GoreeCloud Manager integrations are incomplete.
   - Current Glaze UI consumer acceptance is not established.
-  - Android reproducible build and physical-device acceptance are incomplete.
+  - Android physical-device acceptance is incomplete.
   - Production deployment, accessibility acceptance, recovery acceptance, and exact release evidence are incomplete.

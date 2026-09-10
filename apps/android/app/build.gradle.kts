@@ -12,8 +12,8 @@ android {
         applicationId = "com.goreecloud.reader"
         minSdk = 28
         targetSdk = 36
-        versionCode = 1
-        versionName = "0.0.1-foundation"
+        versionCode = 2
+        versionName = "0.0.2-foundation"
     }
 
     buildFeatures { compose = true }
