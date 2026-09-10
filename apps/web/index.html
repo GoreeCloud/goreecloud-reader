@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>GoreeCloud Reader — Foundation Preview</title>
+  <link rel="stylesheet" href="app.css">
+</head>
+<body>
+  <a class="skip-link" href="#library">Skip to library</a>
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="Reader navigation">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">R</div>
+        <div><strong>GoreeCloud</strong><span>Reader</span></div>
+      </div>
+      <nav>
+        <button class="nav-item active" data-view="all">Library</button>
+        <button class="nav-item" data-view="book">Books</button>
+        <button class="nav-item" data-view="manga">Manga</button>
+        <button class="nav-item" data-view="comic">Comics</button>
+        <button class="nav-item" data-view="audiobook">Audiobooks</button>
+      </nav>
+      <div class="sidebar-note">
+        <strong>Synthetic Preview</strong>
+        <span>No personal media is loaded or transmitted.</span>
+      </div>
+    </aside>
+
+    <main>
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">Development foundation</p>
+          <h1>Your Library</h1>
+        </div>
+        <div class="top-actions">
+          <label class="search">
+            <span class="sr-only">Search library</span>
+            <input id="searchInput" type="search" placeholder="Search titles, creators, series…" autocomplete="off">
+          </label>
+          <button id="importButton" class="primary">Import</button>
+        </div>
+      </header>
+
+      <section class="notice" aria-label="Foundation status">
+        <div>
+          <strong>Synthetic Preview</strong>
+          <span>Reader UI foundation only. Real import, reading, playback, sync, and downloads remain unavailable.</span>
+        </div>
+        <span class="status-chip">0.0.1-foundation</span>
+      </section>
+
+      <section class="resume-section" aria-labelledby="resumeHeading">
+        <div class="section-heading">
+          <div><p class="eyebrow">Resume</p><h2 id="resumeHeading">Continue</h2></div>
+        </div>
+        <div id="continueRail" class="continue-rail"></div>
+      </section>
+
+      <section id="library" aria-labelledby="libraryHeading">
+        <div class="section-heading">
+          <div><p class="eyebrow">Collection</p><h2 id="libraryHeading">All media</h2></div>
+          <div id="resultCount" class="result-count" aria-live="polite"></div>
+        </div>
+        <div id="libraryGrid" class="library-grid"></div>
+        <div id="emptyState" class="empty-state" hidden>
+          <strong>No synthetic titles match.</strong>
+          <button id="clearSearch" class="text-button">Clear search</button>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <dialog id="detailDialog" class="detail-dialog">
+    <button id="closeDialog" class="dialog-close" aria-label="Close details">×</button>
+    <div id="detailContent"></div>
+  </dialog>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="app.js"></script>
+</body>
+</html>

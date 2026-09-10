@@ -1,0 +1,42 @@
+# OS / editors
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+
+# Secrets and local configuration
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.jks
+local.properties
+
+# Web / Node tooling
+node_modules/
+dist/
+build/
+coverage/
+
+# Android / Gradle
+.gradle/
+**/build/
+*.iml
+captures/
+.externalNativeBuild/
+.cxx/
+
+# Reader local/runtime data
+library/
+media/
+downloads/
+cache/
+*.db
+*.sqlite
+*.sqlite3
+
+# Logs
+*.log
