@@ -4,7 +4,7 @@
 
 - Product: GoreeCloud Reader
 - Repository: `GoreeCloud/goreecloud-reader`
-- Version: `0.0.1-foundation`
+- Version: `0.0.3-foundation`
 - Lifecycle: Development
 - License: AGPL-3.0-or-later
 - Implemented clients in this revision: Web foundation, Android foundation
@@ -32,17 +32,23 @@ The foundation defines portable contracts for library items plus reading and lis
 
 `apps/web` is a dependency-free application shell. It renders synthetic Reader items and supports local UI search/filter interactions. It performs no network requests, file-system access, account authentication, persistence, media decoding, or personal-data processing.
 
+The 0.0.3 foundation also adds repository-local GLAZE UI V1.3 semantic token mapping plus source-level resilience checks for visible focus, reduced motion, increased contrast, forced colors, and an opaque fallback when backdrop-filter effects are unavailable. These source mappings are not rendered acceptance.
+
 ### Android client
 
 `apps/android` is a Jetpack Compose scaffold targeting Android API 36 with minimum API 28. It declares no storage, media, network, contacts, account, or other sensitive runtime permission. Its initial screen uses synthetic data only.
+
+The Android debug build path is verified with Android Gradle Plugin 8.10.1, Gradle 8.11.1, JDK 17, and API 36. Source/build success does not establish physical-device, accessibility, release-signing, or production acceptance.
 
 ### Contracts
 
 `contracts/*.schema.json` use JSON Schema 2020-12 for portable data definitions. Schemas currently cover library items, reading progress, and listening progress.
 
+`contracts/glaze-ui/reader-glaze-v1.3.json` is the repository-local GLAZE UI adoption contract. It pins the current Stable GLAZE UI V1.3 / 1.3.0 release to immutable tag `v1.3.0` and exact Glaze source commit `ff34f232f295c9dcb07e4c681f66d4104d0b9323`, records the web/Android mapping surfaces, preserves Platform-System truth boundaries, and keeps every unproven Glaze acceptance gate false.
+
 ### Privacy boundary
 
-`privacy/privacy-shield.application-manifest.json` declares no purposes and no resources. This is deliberately fail-closed. The foundation must not begin real personal-library processing merely because source-level UI or schemas exist.
+`privacy/privacy-shield.application-manifest.json` declares no purposes and no resources. This is deliberately fail-closed. The foundation must not begin real personal-library processing merely because source-level UI, schemas, build output, or design-system adoption controls exist.
 
 ## Platform-System status
 
@@ -52,9 +58,22 @@ All seven GoreeCloud Platform Systems are applicable. Runtime integration is not
 - **Privacy Shield:** blocked; source manifest is fail-closed and runtime authorization/acceptance is absent.
 - **Wardveil Security:** blocked pending security enforcement and accepted evidence.
 - **Everkeep:** blocked pending backup, restore, portability, and recovery verification.
-- **Glaze UI:** adoption in progress; current target is Stable Glaze UI 1.3.0, but Reader consumer acceptance is not established.
+- **Glaze UI:** current target is Stable GLAZE UI V1.3 / 1.3.0. Exact source pinning, repository-local mapping, and automated adoption validation are established, but Reader remains `applicable-migration-required` because rendered web, Android native/physical-device, accessibility, representative task-flow, and product-specific acceptance are incomplete.
 - **GoreeCloud Mesh:** blocked pending justified capability/event contracts.
 - **GoreeCloud Identity:** blocked pending account, profile, authorization, session, and device integration.
+
+## Glaze UI adoption control plane
+
+The current Stable Glaze source authority for Reader is:
+
+- Repository: `GoreeCloud/goreecloud-glaze-ui`
+- Product: `GLAZE UI V1.3 — Adaptive Resonance`
+- Version: `1.3.0`
+- Immutable tag: `v1.3.0`
+- Tag object: `f020fdc8a39de442f9fdfb405d658259c52b99df`
+- Stable source commit: `ff34f232f295c9dcb07e4c681f66d4104d0b9323`
+
+`scripts/validate-glaze-adoption.mjs` fails closed if Reader drifts from that authority, removes its local mapping record, weakens explicit non-acceptance gates, or drops source-level web/native conditions that can be validated automatically. Canonical Glaze consumer registration is tracked separately in the Glaze UI repository and does not by itself establish `accepted-v1`.
 
 ## Data and privacy
 
@@ -80,8 +99,10 @@ The planned architecture treats original media as source assets. Generated deriv
 
 ## Accessibility
 
-Foundation interfaces are structured to support keyboard/touch navigation, semantic headings, scalable layouts, reduced motion, and high-contrast-friendly styling. Formal accessibility acceptance has not been completed.
+Foundation interfaces are structured to support keyboard/touch navigation, semantic headings, scalable layouts, reduced motion, increased-contrast and forced-colors behavior, and native semantic controls. Formal rendered/browser, assistive-technology, Android native, and physical-device accessibility acceptance has not been completed.
 
-## Build and verification limitations
+## Build and verification state
 
-Repository validation verifies source structure and privacy-boundary invariants. Android reproducible builds, device testing, full browser compatibility, accessibility acceptance, security testing, recovery testing, and production deployment are not yet verified.
+Repository validation currently verifies source structure, privacy-boundary invariants, truthful nonconformant state, and the fail-closed GLAZE UI V1.3 adoption contract. CI also builds and verifies a nonempty Android debug APK for the exact candidate and accepted `main` revisions.
+
+The following remain unverified or incomplete: real personal-media behavior, full browser/rendered Glaze acceptance, Android physical-device behavior, assistive-technology acceptance, release signing, Wardveil/runtime security acceptance, Privacy Shield runtime authorization, Everkeep recovery acceptance, Identity/Mesh/Manager runtime integration, and production deployment.
