@@ -4,13 +4,15 @@
 
 Reader targets the current Stable **GLAZE UI V1.3 — Adaptive Resonance** release (`1.3.0`). The adoption control plane is pinned to the immutable Stable tag `v1.3.0`, tag object `f020fdc8a39de442f9fdfb405d658259c52b99df`, and exact Stable Glaze source commit `ff34f232f295c9dcb07e4c681f66d4104d0b9323` in `GoreeCloud/goreecloud-glaze-ui`.
 
-The repository-local machine record is `contracts/glaze-ui/reader-glaze-v1.3.json`. `scripts/validate-glaze-adoption.mjs` fails closed if Reader drifts from the pinned Stable release identity, weakens its acceptance blockers, removes required source mappings, introduces remote web design-system fetching, or drops the foundation accessibility/resilience checks that can be validated automatically.
+The repository-local machine record is `contracts/glaze-ui/reader-glaze-v1.3.json`. `scripts/validate-glaze-adoption.mjs` fails closed if Reader drifts from the pinned Stable release identity or canonical consumer-registration revision, weakens its acceptance blockers, removes required source mappings, introduces remote web design-system fetching, or drops the foundation accessibility/resilience checks that can be validated automatically.
 
 ## Canonical consumer registration
 
-Glaze UI PR #178 registers `GoreeCloud/goreecloud-reader` as an explicit V1.3 consumer with status `adoption-required` and `productionEligible: false` in the canonical `consumers/registry.json`.
+Glaze UI PR #178 was merged into the authoritative `GoreeCloud/goreecloud-glaze-ui` `main` branch as revision `8354308445da9ac35ced2b37a7f503a08a0aaf72`. The canonical `consumers/registry.json` now registers `GoreeCloud/goreecloud-reader` with status `adoption-required`, `requiredTargetVersion: 1.3.0`, no accepted target/revision/evidence, and `productionEligible: false`.
 
-That registration is governance metadata only. It does not grant Reader acceptance, Stable status, or production eligibility.
+The relevant current-authority post-merge Glaze checks passed on that exact `main` revision: **GLAZE UI Consumer Registry** run `34442401310` and **GLAZE UI V1.3 Migration and Consumer Boundary** run `34442401386`.
+
+That registration is governance evidence only. It does not grant Reader `accepted-v1`, Stable application status, overall conformance, or production eligibility. Older V1.1/V1.2 Candidate workflow families remain separate historical repository debt and are not used as Reader acceptance evidence.
 
 ## Repository-local mapping
 
@@ -34,7 +36,7 @@ These mappings are implementation evidence, not rendered acceptance.
 
 The Android foundation uses Jetpack Compose / Material 3 primitives as a native mapping surface for semantic hierarchy, native controls, accessibility behavior, and platform integration. Material 3 is not treated as a substitute for Glaze UI and does not independently establish Glaze conformance.
 
-Current Android evidence remains limited to source review plus the previously verified reproducible API 36 debug build. Real-device visual, ergonomic, accessibility, and task-flow acceptance are still required.
+Current Android evidence remains limited to source review plus the verified reproducible API 36 debug-build path. Real-device visual, ergonomic, accessibility, and task-flow acceptance are still required.
 
 ## Truth and authority boundaries
 
@@ -49,7 +51,7 @@ Glaze UI governs presentation and interaction only. Reader must not let visual s
 
 ## Acceptance status
 
-**Not accepted yet.** Repository-local mapping, exact Stable source pinning, canonical consumer registration, and automated checks are necessary but not sufficient for GLAZE UI acceptance.
+**Not accepted yet.** Repository-local mapping, exact Stable source pinning, verified canonical consumer registration, and automated checks are necessary but not sufficient for GLAZE UI acceptance.
 
 The following gates remain fail-closed:
 
