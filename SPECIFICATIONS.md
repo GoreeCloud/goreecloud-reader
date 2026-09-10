@@ -46,6 +46,8 @@ The Android debug build path is verified with Android Gradle Plugin 8.10.1, Grad
 
 `contracts/glaze-ui/reader-glaze-v1.3.json` is the repository-local GLAZE UI adoption contract. It pins the current Stable GLAZE UI V1.3 / 1.3.0 release to immutable tag `v1.3.0` and exact Glaze source commit `ff34f232f295c9dcb07e4c681f66d4104d0b9323`, records the web/Android mapping surfaces, preserves Platform-System truth boundaries, and keeps every unproven Glaze acceptance gate false.
 
+The contract also binds Reader to the verified canonical Glaze consumer registration `GoreeCloud/goreecloud-glaze-ui#178@8354308445da9ac35ced2b37a7f503a08a0aaf72:adoption-required`. That record confirms Reader is registered for the required current Stable 1.3.0 baseline while remaining unaccepted and not production-eligible.
+
 ### Privacy boundary
 
 `privacy/privacy-shield.application-manifest.json` declares no purposes and no resources. This is deliberately fail-closed. The foundation must not begin real personal-library processing merely because source-level UI, schemas, build output, or design-system adoption controls exist.
@@ -58,7 +60,7 @@ All seven GoreeCloud Platform Systems are applicable. Runtime integration is not
 - **Privacy Shield:** blocked; source manifest is fail-closed and runtime authorization/acceptance is absent.
 - **Wardveil Security:** blocked pending security enforcement and accepted evidence.
 - **Everkeep:** blocked pending backup, restore, portability, and recovery verification.
-- **Glaze UI:** current target is Stable GLAZE UI V1.3 / 1.3.0. Exact source pinning, repository-local mapping, and automated adoption validation are established, but Reader remains `applicable-migration-required` because rendered web, Android native/physical-device, accessibility, representative task-flow, and product-specific acceptance are incomplete.
+- **Glaze UI:** current target is Stable GLAZE UI V1.3 / 1.3.0. Exact source pinning, verified canonical `adoption-required` registration, repository-local mapping, and automated adoption validation are established, but Reader remains `applicable-migration-required` because rendered web, Android native/physical-device, accessibility, representative task-flow, and product-specific acceptance are incomplete.
 - **GoreeCloud Mesh:** blocked pending justified capability/event contracts.
 - **GoreeCloud Identity:** blocked pending account, profile, authorization, session, and device integration.
 
@@ -72,8 +74,11 @@ The current Stable Glaze source authority for Reader is:
 - Immutable tag: `v1.3.0`
 - Tag object: `f020fdc8a39de442f9fdfb405d658259c52b99df`
 - Stable source commit: `ff34f232f295c9dcb07e4c681f66d4104d0b9323`
+- Canonical consumer registration merge: PR #178 / `8354308445da9ac35ced2b37a7f503a08a0aaf72`
+- Canonical consumer state: `adoption-required`; accepted target/revision/evidence remain unset; `productionEligible: false`
+- Relevant post-merge Glaze validation: Consumer Registry run `34442401310`; V1.3 Migration and Consumer Boundary run `34442401386`
 
-`scripts/validate-glaze-adoption.mjs` fails closed if Reader drifts from that authority, removes its local mapping record, weakens explicit non-acceptance gates, or drops source-level web/native conditions that can be validated automatically. Canonical Glaze consumer registration is tracked separately in the Glaze UI repository and does not by itself establish `accepted-v1`.
+`scripts/validate-glaze-adoption.mjs` fails closed if Reader drifts from the Stable source authority or verified consumer-registration revision, removes its local mapping record, weakens explicit non-acceptance gates, or drops source-level web/native conditions that can be validated automatically. Canonical registration does not by itself establish `accepted-v1`.
 
 ## Data and privacy
 
@@ -103,6 +108,6 @@ Foundation interfaces are structured to support keyboard/touch navigation, seman
 
 ## Build and verification state
 
-Repository validation currently verifies source structure, privacy-boundary invariants, truthful nonconformant state, and the fail-closed GLAZE UI V1.3 adoption contract. CI also builds and verifies a nonempty Android debug APK for the exact candidate and accepted `main` revisions.
+Repository validation verifies source structure, privacy-boundary invariants, truthful nonconformant state, the fail-closed GLAZE UI V1.3 adoption contract, and the exact canonical Glaze consumer-registration anchor. CI also builds and verifies a nonempty Android debug APK for the exact candidate and accepted `main` revisions.
 
 The following remain unverified or incomplete: real personal-media behavior, full browser/rendered Glaze acceptance, Android physical-device behavior, assistive-technology acceptance, release signing, Wardveil/runtime security acceptance, Privacy Shield runtime authorization, Everkeep recovery acceptance, Identity/Mesh/Manager runtime integration, and production deployment.
