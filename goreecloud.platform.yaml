@@ -6,7 +6,6 @@ component:
   repository: GoreeCloud/goreecloud-reader
 lifecycle: development
 version: '0.0.2-foundation'
-license: AGPL-3.0-or-later
 supported_platforms:
 - web
 - android
@@ -44,7 +43,7 @@ platform_systems:
     notes: Backup, restore, preservation, portability, and recovery verification are planned but not implemented.
   glaze_ui:
     result: applicable-migration-required
-    version: 1.3.0
+    version: '1.3.0'
     evidence:
     - docs/GLAZE-UI-ADOPTION.md
     - apps/web/app.css
@@ -89,16 +88,16 @@ continuity:
     - Preserve original media and understandable portable metadata/state formats wherever practical.
 external_dependencies:
 - name: Gradle
+  purpose: Build the Android development application and execute repository build tasks.
   required: true
-  status: development-build
-  version: 8.11.1
+  version_constraint: '==8.11.1'
 - name: Android Gradle Plugin
+  purpose: Provide Android build tooling for the Reader Android foundation.
   required: true
-  status: development-build
-  version: 8.10.1
+  version_constraint: '==8.10.1'
 compatibility:
   platform_contract: '0.2'
-  glaze_ui_required: 1.3.0
+  glaze_ui_required: '1.3.0'
   requires:
   - goreecloud-platform-contract==0.2
   - glaze-ui==1.3.0
@@ -106,9 +105,7 @@ compatibility:
   - goreecloud-reader-web-foundation
   - goreecloud-reader-android-foundation
 evidence:
-  acceptance_tests:
-  - .github/workflows/validate.yml
-  - docs/ANDROID-BUILD.md
+  acceptance_tests: []
   release: []
 conformance:
   status: nonconformant
