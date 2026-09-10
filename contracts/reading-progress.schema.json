@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://goreecloud.com/schemas/reader/reading-progress.schema.json",
+  "title": "GoreeCloud Reader Reading Progress",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["item_id", "media_kind", "updated_at"],
+  "properties": {
+    "item_id": { "type": "string", "minLength": 1 },
+    "media_kind": { "enum": ["book", "manga", "comic", "pdf"] },
+    "chapter": { "type": ["string", "null"] },
+    "page": { "type": ["integer", "null"], "minimum": 1 },
+    "location": { "type": ["string", "null"] },
+    "fraction_completed": { "type": ["number", "null"], "minimum": 0, "maximum": 1 },
+    "updated_at": { "type": "string", "format": "date-time" }
+  }
+}

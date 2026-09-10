@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://goreecloud.com/schemas/reader/library-item.schema.json",
+  "title": "GoreeCloud Reader Library Item",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "kind", "title", "progress"],
+  "properties": {
+    "id": { "type": "string", "minLength": 1 },
+    "kind": { "enum": ["book", "manga", "comic", "audiobook"] },
+    "title": { "type": "string", "minLength": 1 },
+    "series": { "type": ["string", "null"] },
+    "creator": { "type": ["string", "null"] },
+    "volume": { "type": ["number", "null"], "minimum": 0 },
+    "issue": { "type": ["number", "null"], "minimum": 0 },
+    "progress": { "type": "number", "minimum": 0, "maximum": 1 },
+    "status": { "enum": ["unread", "in-progress", "completed"] },
+    "synthetic": { "type": "boolean" }
+  }
+}
