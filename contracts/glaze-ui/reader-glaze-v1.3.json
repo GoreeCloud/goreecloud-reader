@@ -59,7 +59,7 @@
     "presentationRule": "Glaze UI may present platform-system state but must not create, strengthen, merge, or reinterpret that authority."
   },
   "acceptance": {
-    "canonicalConsumerRegistration": "pending-glaze-pr-178",
+    "canonicalConsumerRegistration": "GoreeCloud/goreecloud-glaze-ui#178@8354308445da9ac35ced2b37a7f503a08a0aaf72:adoption-required",
     "repositoryLocalMapping": true,
     "automatedAdoptionValidation": true,
     "renderedWebAcceptance": false,
@@ -72,5 +72,5 @@
     "acceptedV1Authorized": false
   },
   "status": "adoption-in-progress",
-  "notes": "This contract pins Reader to the exact current Stable GLAZE UI V1.3 release anchor and establishes fail-closed repository-local adoption controls. It intentionally does not claim rendered, native, physical-device, accessibility, task-flow, Stable-product, or production acceptance."
+  "notes": "This contract pins Reader to the exact current Stable GLAZE UI V1.3 release anchor and the verified canonical adoption-required consumer registration. It intentionally does not claim rendered, native, physical-device, accessibility, task-flow, Stable-product, or production acceptance."
 }
