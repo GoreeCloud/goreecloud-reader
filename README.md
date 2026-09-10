@@ -7,11 +7,11 @@ GoreeCloud Reader is an original GoreeCloud-owned, open-source, self-hosted read
 ## Current status
 
 **Lifecycle:** Development foundation  
-**Version:** `0.0.1-foundation`  
+**Version:** `0.0.2-foundation`  
 **Production status:** Not production-ready  
 **Governing license:** GNU Affero General Public License v3 or later (`AGPL-3.0-or-later`)
 
-The repository currently contains a functional **synthetic-data application shell** for web and Android, shared media-domain contracts, a fail-closed Privacy Shield application manifest, and repository validation controls. It does **not** yet process a real personal library, read real books, play real audiobooks, synchronize user state, or claim runtime acceptance by GoreeCloud Platform Systems.
+The repository currently contains a functional **synthetic-data application shell** for web and Android, shared media-domain contracts, a fail-closed Privacy Shield application manifest, repository validation controls, and a checksum-pinned Android debug build path. It does **not** yet process a real personal library, read real books, play real audiobooks, synchronize user state, or claim runtime acceptance by GoreeCloud Platform Systems.
 
 ## Repository structure
 
@@ -19,8 +19,8 @@ The repository currently contains a functional **synthetic-data application shel
 - `apps/android` — Android/Jetpack Compose application foundation using synthetic Reader items only.
 - `contracts` — versioned JSON Schemas for library items and progress state.
 - `privacy` — fail-closed Privacy Shield application manifest.
-- `scripts` — repository and privacy-boundary validation.
-- `docs` — architecture, privacy, and Glaze UI adoption notes.
+- `scripts` — repository, privacy-boundary, and Gradle-wrapper bootstrap controls.
+- `docs` — architecture, privacy, Android build, and Glaze UI adoption notes.
 - `goreecloud.platform.yaml` — machine-readable GoreeCloud Platform Contract declaration.
 
 ## Foundation behavior
@@ -41,14 +41,22 @@ The authoritative feature plan is tracked in [`FEATURE-ROADMAP.md`](FEATURE-ROAD
 
 ## Validation
 
-Run:
+Source-level checks:
 
 ```bash
 node scripts/validate-foundation.mjs
 node scripts/validate-privacy-boundary.mjs
 ```
 
-CI runs the same source-level checks. Passing these checks proves only the validated foundation constraints; it does not prove production readiness or Stable conformance.
+Android debug build:
+
+```bash
+./scripts/bootstrap-gradle-wrapper.sh
+cd apps/android
+./gradlew --no-daemon :app:assembleDebug
+```
+
+The bootstrap and Gradle distribution are checksum-pinned. CI validates source controls and builds the Android debug APK for the exact candidate revision. Passing these checks does not prove production readiness, physical-device acceptance, release signing, or Stable conformance.
 
 ## Licensing
 

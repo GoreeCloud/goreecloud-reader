@@ -28,6 +28,7 @@ coverage/
 captures/
 .externalNativeBuild/
 .cxx/
+apps/android/gradle/wrapper/gradle-wrapper.jar
 
 # Reader local/runtime data
 library/
