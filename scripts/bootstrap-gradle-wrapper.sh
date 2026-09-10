@@ -5,7 +5,7 @@ SCRIPT_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
 ROOT_DIR=$(CDPATH= cd -- "$SCRIPT_DIR/.." && pwd)
 WRAPPER_DIR="$ROOT_DIR/apps/android/gradle/wrapper"
 WRAPPER_JAR="$WRAPPER_DIR/gradle-wrapper.jar"
-WRAPPER_URL="https://services.gradle.org/distributions/gradle-8.11.1-wrapper.jar"
+WRAPPER_URL="https://raw.githubusercontent.com/gradle/gradle/v8.11.1/gradle/wrapper/gradle-wrapper.jar"
 EXPECTED_SHA256="2db75c40782f5e8ba1fc278a5574bab070adccb2d21ca5a6e5ed840888448046"
 
 mkdir -p "$WRAPPER_DIR"
@@ -35,4 +35,4 @@ fi
 mv "$TMP" "$WRAPPER_JAR"
 trap - EXIT HUP INT TERM
 
-echo "Downloaded and verified Gradle 8.11.1 wrapper JAR."
+echo "Downloaded and verified Gradle 8.11.1 wrapper JAR from the official Gradle source tag."
