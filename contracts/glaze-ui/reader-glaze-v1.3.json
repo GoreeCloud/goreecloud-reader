@@ -1,0 +1,76 @@
+{
+  "schemaVersion": 1,
+  "recordType": "goreecloud-reader-glaze-v1.3-adoption-contract",
+  "consumer": {
+    "name": "GoreeCloud Reader",
+    "repository": "GoreeCloud/goreecloud-reader",
+    "foundationVersion": "0.0.3-foundation",
+    "lifecycle": "development",
+    "supportedSurfaces": ["web", "android"]
+  },
+  "glazeUi": {
+    "productLabel": "GLAZE UI V1.3 — Adaptive Resonance",
+    "version": "1.3.0",
+    "tag": "v1.3.0",
+    "tagObjectSha": "f020fdc8a39de442f9fdfb405d658259c52b99df",
+    "stableSourceCommit": "ff34f232f295c9dcb07e4c681f66d4104d0b9323",
+    "repository": "GoreeCloud/goreecloud-glaze-ui",
+    "contract": "GLAZE_UI_V1_3.md",
+    "webEntrypoint": "css/glaze-v1.3.0.css",
+    "runtimeEntrypoint": "js/glaze-v1.3.0.mjs"
+  },
+  "sourceMapping": {
+    "web": {
+      "files": [
+        "apps/web/index.html",
+        "apps/web/app.css",
+        "apps/web/app.js"
+      ],
+      "requiredFoundationSemantics": [
+        "solid-readable-content",
+        "glazed-transient-chrome",
+        "visible-keyboard-focus",
+        "reduced-motion",
+        "responsive-layout",
+        "graceful-no-backdrop-filter-fallback",
+        "explicit-unavailable-state"
+      ]
+    },
+    "android": {
+      "files": [
+        "apps/android/app/src/main/java/com/goreecloud/reader/MainActivity.kt"
+      ],
+      "nativeMapping": "Jetpack Compose Material 3 primitives are a platform-native mapping surface only; they do not independently establish GLAZE UI conformance.",
+      "requiredFoundationSemantics": [
+        "native-semantic-hierarchy",
+        "minimum-touch-target-intent",
+        "adaptive-layout-intent",
+        "explicit-unavailable-state",
+        "accessibility-preserving-native-primitives"
+      ]
+    }
+  },
+  "truthBoundaries": {
+    "privacyAuthority": "Privacy Shield",
+    "securityAuthority": "Wardveil Security",
+    "continuityAuthority": "Everkeep",
+    "identityAuthority": "GoreeCloud Identity",
+    "coordinationAuthority": "GoreeCloud Mesh",
+    "presentationRule": "Glaze UI may present platform-system state but must not create, strengthen, merge, or reinterpret that authority."
+  },
+  "acceptance": {
+    "canonicalConsumerRegistration": "pending-glaze-pr-178",
+    "repositoryLocalMapping": true,
+    "automatedAdoptionValidation": true,
+    "renderedWebAcceptance": false,
+    "webAccessibilityAcceptance": false,
+    "androidNativeAcceptance": false,
+    "androidPhysicalDeviceAcceptance": false,
+    "androidAccessibilityAcceptance": false,
+    "representativeTaskFlowAcceptance": false,
+    "productionEligible": false,
+    "acceptedV1Authorized": false
+  },
+  "status": "adoption-in-progress",
+  "notes": "This contract pins Reader to the exact current Stable GLAZE UI V1.3 release anchor and establishes fail-closed repository-local adoption controls. It intentionally does not claim rendered, native, physical-device, accessibility, task-flow, Stable-product, or production acceptance."
+}
