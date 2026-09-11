@@ -5,7 +5,7 @@ component:
   product_name: GoreeCloud Reader
   repository: GoreeCloud/goreecloud-reader
 lifecycle: development
-version: '0.0.2-foundation'
+version: '0.0.3-foundation'
 license: AGPL-3.0-or-later
 supported_platforms:
 - web
@@ -46,10 +46,12 @@ platform_systems:
     result: applicable-migration-required
     version: 1.3.0
     evidence:
+    - contracts/glaze-ui/reader-glaze-v1.3.json
+    - scripts/validate-glaze-adoption.mjs
     - docs/GLAZE-UI-ADOPTION.md
     - apps/web/app.css
     - apps/android/app/src/main/java/com/goreecloud/reader/MainActivity.kt
-    notes: Stable Glaze UI 1.3.0 is the current target. Foundation styling follows its direction, but Reader consumer acceptance is not established.
+    notes: Reader is pinned to Stable GLAZE UI V1.3 / 1.3.0 at exact Glaze source commit ff34f232f295c9dcb07e4c681f66d4104d0b9323. Repository-local mapping and fail-closed automation are established, but rendered web, Android native/physical-device, accessibility, representative task-flow, and production acceptance are not established.
   mesh:
     result: applicable-blocked
     version: null
@@ -108,6 +110,7 @@ compatibility:
 evidence:
   acceptance_tests:
   - .github/workflows/validate.yml
+  - scripts/validate-glaze-adoption.mjs
   - docs/ANDROID-BUILD.md
   release: []
 conformance:
@@ -118,6 +121,8 @@ conformance:
   - FEATURES.md
   - docs/ARCHITECTURE.md
   - docs/ANDROID-BUILD.md
+  - contracts/glaze-ui/reader-glaze-v1.3.json
+  - scripts/validate-glaze-adoption.mjs
   - docs/GLAZE-UI-ADOPTION.md
   - docs/PRIVACY.md
   - privacy/privacy-shield.application-manifest.json

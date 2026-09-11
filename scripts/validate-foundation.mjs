@@ -27,10 +27,13 @@ const requiredFoundationFiles = [
   'contracts/library-item.schema.json',
   'contracts/reading-progress.schema.json',
   'contracts/listening-progress.schema.json',
+  'contracts/glaze-ui/reader-glaze-v1.3.json',
   'privacy/privacy-shield.application-manifest.json',
   'docs/ARCHITECTURE.md',
+  'docs/ANDROID-BUILD.md',
   'docs/GLAZE-UI-ADOPTION.md',
-  'docs/PRIVACY.md'
+  'docs/PRIVACY.md',
+  'scripts/validate-glaze-adoption.mjs'
 ];
 
 const fail = (message) => {
@@ -38,13 +41,19 @@ const fail = (message) => {
   process.exit(1);
 };
 
-for (const path of [...requiredRootFiles, ...requiredFoundationFiles]) {
-  if (!fs.existsSync(path)) fail(`missing ${path}`);
-  if (fs.statSync(path).isFile() && fs.readFileSync(path, 'utf8').trim().length < 20) fail(`${path} is materially empty`);
+for (const filePath of [...requiredRootFiles, ...requiredFoundationFiles]) {
+  if (!fs.existsSync(filePath)) fail(`missing ${filePath}`);
+  if (fs.statSync(filePath).isFile() && fs.readFileSync(filePath, 'utf8').trim().length < 20) fail(`${filePath} is materially empty`);
 }
 
-for (const path of ['contracts/library-item.schema.json', 'contracts/reading-progress.schema.json', 'contracts/listening-progress.schema.json', 'privacy/privacy-shield.application-manifest.json']) {
-  JSON.parse(fs.readFileSync(path, 'utf8'));
+for (const filePath of [
+  'contracts/library-item.schema.json',
+  'contracts/reading-progress.schema.json',
+  'contracts/listening-progress.schema.json',
+  'contracts/glaze-ui/reader-glaze-v1.3.json',
+  'privacy/privacy-shield.application-manifest.json'
+]) {
+  JSON.parse(fs.readFileSync(filePath, 'utf8'));
 }
 
 const webHtml = fs.readFileSync('apps/web/index.html', 'utf8');
@@ -55,5 +64,12 @@ if (!features.includes('Not implemented / still planned')) fail('FEATURES.md mus
 
 const platform = fs.readFileSync('goreecloud.platform.yaml', 'utf8');
 if (!platform.includes('status: nonconformant')) fail('platform contract must remain nonconformant at foundation stage');
+if (!platform.includes("version: '0.0.3-foundation'")) fail('platform contract must identify the 0.0.3 foundation milestone');
+
+const readme = fs.readFileSync('README.md', 'utf8');
+const specifications = fs.readFileSync('SPECIFICATIONS.md', 'utf8');
+for (const [name, value] of [['README.md', readme], ['SPECIFICATIONS.md', specifications]]) {
+  if (!value.includes('0.0.3-foundation')) fail(`${name} must match the 0.0.3 foundation milestone`);
+}
 
 console.log('Reader foundation validation passed.');

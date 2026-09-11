@@ -12,8 +12,14 @@ permissions:
 jobs:
   foundation:
     runs-on: ubuntu-latest
+    env:
+      READER_SOURCE_REVISION: ${{ github.event.pull_request.head.sha || github.sha }}
     steps:
       - uses: actions/checkout@v6
+        with:
+          ref: ${{ env.READER_SOURCE_REVISION }}
+      - name: Verify exact source revision
+        run: test "$(git rev-parse HEAD)" = "$READER_SOURCE_REVISION"
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
@@ -21,16 +27,25 @@ jobs:
         run: node scripts/validate-foundation.mjs
       - name: Validate privacy boundary
         run: node scripts/validate-privacy-boundary.mjs
+      - name: Validate Glaze UI adoption boundary
+        run: node scripts/validate-glaze-adoption.mjs
       - name: Validate truthful platform status
         run: |
           grep -q "lifecycle: development" goreecloud.platform.yaml
           grep -q "status: nonconformant" goreecloud.platform.yaml
           grep -q "license: AGPL-3.0-or-later" goreecloud.platform.yaml
+          grep -q "result: applicable-migration-required" goreecloud.platform.yaml
 
   android-debug-build:
     runs-on: ubuntu-latest
+    env:
+      READER_SOURCE_REVISION: ${{ github.event.pull_request.head.sha || github.sha }}
     steps:
       - uses: actions/checkout@v6
+        with:
+          ref: ${{ env.READER_SOURCE_REVISION }}
+      - name: Verify exact source revision
+        run: test "$(git rev-parse HEAD)" = "$READER_SOURCE_REVISION"
       - uses: actions/setup-java@v5
         with:
           distribution: temurin
@@ -52,7 +67,7 @@ jobs:
       - name: Upload Android debug build evidence
         uses: actions/upload-artifact@v4
         with:
-          name: goreecloud-reader-android-debug-${{ github.sha }}
+          name: goreecloud-reader-android-debug-${{ env.READER_SOURCE_REVISION }}
           path: apps/android/app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
           retention-days: 14
