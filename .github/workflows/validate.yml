@@ -12,8 +12,14 @@ permissions:
 jobs:
   foundation:
     runs-on: ubuntu-latest
+    env:
+      READER_SOURCE_REVISION: ${{ github.event.pull_request.head.sha || github.sha }}
     steps:
       - uses: actions/checkout@v6
+        with:
+          ref: ${{ env.READER_SOURCE_REVISION }}
+      - name: Verify exact source revision
+        run: test "$(git rev-parse HEAD)" = "$READER_SOURCE_REVISION"
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
@@ -32,8 +38,14 @@ jobs:
 
   android-debug-build:
     runs-on: ubuntu-latest
+    env:
+      READER_SOURCE_REVISION: ${{ github.event.pull_request.head.sha || github.sha }}
     steps:
       - uses: actions/checkout@v6
+        with:
+          ref: ${{ env.READER_SOURCE_REVISION }}
+      - name: Verify exact source revision
+        run: test "$(git rev-parse HEAD)" = "$READER_SOURCE_REVISION"
       - uses: actions/setup-java@v5
         with:
           distribution: temurin
@@ -55,7 +67,7 @@ jobs:
       - name: Upload Android debug build evidence
         uses: actions/upload-artifact@v4
         with:
-          name: goreecloud-reader-android-debug-${{ github.sha }}
+          name: goreecloud-reader-android-debug-${{ env.READER_SOURCE_REVISION }}
           path: apps/android/app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
           retention-days: 14
