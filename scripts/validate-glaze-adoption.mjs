@@ -19,6 +19,7 @@ const css = read('apps/web/app.css');
 const html = read('apps/web/index.html');
 const js = read('apps/web/app.js');
 const webPackage = json('apps/web/package.json');
+const webConfig = read('apps/web/playwright.config.mjs');
 const webTests = read('apps/web/tests/glaze-rendered.spec.mjs');
 const android = read('apps/android/app/src/main/java/com/goreecloud/reader/MainActivity.kt');
 
@@ -112,7 +113,10 @@ requireCheck(!remotePattern.test(js), 'web JS must not fetch remote Glaze or thi
 
 requireCheck(webPackage.devDependencies?.['@playwright/test'] === '1.63.0', 'Playwright must remain exactly pinned to 1.63.0');
 requireCheck(webPackage.devDependencies?.['axe-core'] === '4.13.0', 'axe-core must remain exactly pinned to 4.13.0');
-for (const token of ['chromium', 'firefox', 'webkit', 'axe-core/axe.min.js', 'reducedMotion', 'Open synthetic details for Lantern District']) {
+for (const token of ["name: 'chromium'", "name: 'firefox'", "name: 'webkit'"]) {
+  requireCheck(webConfig.includes(token), `Playwright configuration must retain ${token} coverage`);
+}
+for (const token of ['axe-core/axe.min.js', 'reducedMotion', 'Open synthetic details for Lantern District']) {
   requireCheck(webTests.includes(token), `rendered-web test harness must retain ${token} coverage`);
 }
 
