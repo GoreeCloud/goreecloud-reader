@@ -7,15 +7,15 @@ GoreeCloud Reader is an original GoreeCloud-owned, open-source, self-hosted read
 ## Current status
 
 **Lifecycle:** Development foundation  
-**Version:** `0.0.3-foundation`  
+**Version:** `0.0.4-foundation`  
 **Production status:** Not production-ready  
 **Governing license:** GNU Affero General Public License v3 or later (`AGPL-3.0-or-later`)
 
-The repository currently contains a functional **synthetic-data application shell** for web and Android, shared media-domain contracts, a fail-closed Privacy Shield application manifest, repository validation controls, a checksum-pinned Android debug build path, and an exact-source-pinned GLAZE UI V1.3 adoption control plane. It does **not** yet process a real personal library, read real books, play real audiobooks, synchronize user state, or claim runtime acceptance by GoreeCloud Platform Systems.
+The repository currently contains a functional **synthetic-data application shell** for web and Android, shared media-domain contracts, a fail-closed Privacy Shield application manifest, repository validation controls, a checksum-pinned Android debug build path, an exact-source-pinned GLAZE UI V1.3 adoption control plane, and automated browser-rendered verification of the synthetic web foundation across Chromium, Firefox, and WebKit. It does **not** yet process a real personal library, read real books, play real audiobooks, synchronize user state, or claim runtime acceptance by GoreeCloud Platform Systems.
 
 ## Repository structure
 
-- `apps/web` — dependency-free web application foundation using synthetic Reader items only.
+- `apps/web` — static web application foundation using synthetic Reader items, with development-only rendered-browser verification.
 - `apps/android` — Android/Jetpack Compose application foundation using synthetic Reader items only.
 - `contracts` — versioned JSON Schemas plus the repository-local GLAZE UI V1.3 adoption contract.
 - `privacy` — fail-closed Privacy Shield application manifest.
@@ -25,13 +25,7 @@ The repository currently contains a functional **synthetic-data application shel
 
 ## Foundation behavior
 
-The web and Android shells demonstrate:
-
-- Books, Manga, Comics, and Audiobooks library categories.
-- Search and media-type filtering over synthetic content.
-- Artwork-oriented card presentation.
-- Continue Reading / Continue Listening-style progress presentation.
-- Clear unavailable-state handling for import, readers, playback, synchronization, and downloads.
+The web and Android shells demonstrate Books, Manga, Comics, and Audiobooks library categories; search and media-type filtering over synthetic content; artwork-oriented card presentation; Continue Reading / Continue Listening-style progress presentation; and clear unavailable-state handling for import, readers, playback, synchronization, and downloads.
 
 No personal reading data is accepted by this foundation. Real content processing remains blocked until the required privacy, identity, security, continuity, management, and integration boundaries are implemented and accepted.
 
@@ -39,7 +33,7 @@ No personal reading data is accepted by this foundation. Real content processing
 
 Reader targets **GLAZE UI V1.3 / 1.3.0 Stable** and pins its repository-local adoption contract to immutable tag `v1.3.0` and exact Glaze source commit `ff34f232f295c9dcb07e4c681f66d4104d0b9323`.
 
-This establishes migration/adoption control, not acceptance. Rendered web acceptance, Android native and physical-device acceptance, accessibility acceptance, representative task-flow acceptance, and product-specific production acceptance remain open. Reader therefore remains `applicable-migration-required` for Glaze UI and `nonconformant` overall.
+The 0.0.4 foundation adds actual browser-rendered CI across Chromium, Firefox, and WebKit for the implemented synthetic web surface, including keyboard/focus, search/filter/detail/unavailable-state, responsive/reduced-motion, local-network-boundary, and automated WCAG A/AA checks. This is evidence, not full Glaze acceptance. Manual assistive-technology, real-product task-flow, Android native/physical-device, rollback, and production acceptance remain open. Reader therefore remains `applicable-migration-required` for Glaze UI and `nonconformant` overall.
 
 ## Planned product scope
 
@@ -55,6 +49,15 @@ node scripts/validate-privacy-boundary.mjs
 node scripts/validate-glaze-adoption.mjs
 ```
 
+Rendered web checks:
+
+```bash
+cd apps/web
+npm install --ignore-scripts --no-audit --no-fund
+npx playwright install --with-deps chromium firefox webkit
+npm run test:rendered
+```
+
 Android debug build:
 
 ```bash
@@ -63,11 +66,11 @@ cd apps/android
 ./gradlew --no-daemon :app:assembleDebug
 ```
 
-The bootstrap and Gradle distribution are checksum-pinned. CI validates source controls, the fail-closed Glaze adoption contract, and the Android debug APK for the exact candidate revision. Passing these checks does not prove production readiness, physical-device acceptance, release signing, accessibility acceptance, or Stable application conformance.
+CI validates the exact candidate revision. Passing the automated browser and Android jobs does not prove production readiness, manual assistive-technology acceptance, physical-device acceptance, release signing, recovery acceptance, or full Stable application conformance.
 
 ## Licensing
 
-GoreeCloud Reader is licensed under **AGPL-3.0-or-later**. See [`LICENSE`](LICENSE). Third-party dependencies remain governed by their respective licenses.
+GoreeCloud Reader is licensed under **AGPL-3.0-or-later**. See [`LICENSE`](LICENSE). Development-test and build dependencies remain governed by their respective licenses; the web rendered-verification dependencies are documented in `apps/web/TESTING.md`.
 
 ## Contribution boundary
 

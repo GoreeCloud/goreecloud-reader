@@ -20,6 +20,8 @@ node_modules/
 dist/
 build/
 coverage/
+apps/web/test-results/
+apps/web/playwright-report/
 
 # Android / Gradle
 .gradle/

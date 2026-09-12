@@ -1,0 +1,17 @@
+{
+  "name": "@goreecloud/reader-web-foundation",
+  "version": "0.0.4-foundation",
+  "private": true,
+  "type": "module",
+  "license": "AGPL-3.0-or-later",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "test:rendered": "playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.63.0",
+    "axe-core": "4.13.0"
+  }
+}
