@@ -4,7 +4,7 @@
   "consumer": {
     "name": "GoreeCloud Reader",
     "repository": "GoreeCloud/goreecloud-reader",
-    "foundationVersion": "0.0.3-foundation",
+    "foundationVersion": "0.0.4-foundation",
     "lifecycle": "development",
     "supportedSurfaces": ["web", "android"]
   },
@@ -58,6 +58,33 @@
     "coordinationAuthority": "GoreeCloud Mesh",
     "presentationRule": "Glaze UI may present platform-system state but must not create, strengthen, merge, or reinterpret that authority."
   },
+  "automatedWebEvidence": {
+    "configured": true,
+    "scope": "synthetic-foundation-only",
+    "engines": ["chromium", "firefox", "webkit"],
+    "runner": "@playwright/test@1.63.0",
+    "accessibilityEngine": "axe-core@4.13.0",
+    "test": "apps/web/tests/glaze-rendered.spec.mjs",
+    "checks": [
+      "local-only-network-boundary",
+      "keyboard-focus-and-skip-navigation",
+      "filter-search-empty-state-recovery",
+      "dialog-focus-and-unavailable-actions",
+      "progress-semantics",
+      "responsive-narrow-window-layout",
+      "reduced-motion",
+      "automated-wcag-a-aa"
+    ],
+    "limitations": [
+      "manual-assistive-technology",
+      "human-visual-optical-review",
+      "real-reader-product-workflows",
+      "android-native-physical-device",
+      "production-performance",
+      "rollback-approval",
+      "production-approval"
+    ]
+  },
   "acceptance": {
     "canonicalConsumerRegistration": "GoreeCloud/goreecloud-glaze-ui#178@8354308445da9ac35ced2b37a7f503a08a0aaf72:adoption-required",
     "repositoryLocalMapping": true,
@@ -72,5 +99,5 @@
     "acceptedV1Authorized": false
   },
   "status": "adoption-in-progress",
-  "notes": "This contract pins Reader to the exact current Stable GLAZE UI V1.3 release anchor and the verified canonical adoption-required consumer registration. It intentionally does not claim rendered, native, physical-device, accessibility, task-flow, Stable-product, or production acceptance."
+  "notes": "Reader now carries an automated three-engine rendered-web verification harness for the synthetic foundation, but this does not satisfy the broader manual/accessibility/product/production evidence required for accepted-v1. Formal Glaze acceptance remains fail-closed."
 }

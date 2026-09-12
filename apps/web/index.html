@@ -15,12 +15,12 @@
         <div class="brand-mark" aria-hidden="true">R</div>
         <div><strong>GoreeCloud</strong><span>Reader</span></div>
       </div>
-      <nav>
-        <button class="nav-item active" data-view="all">Library</button>
-        <button class="nav-item" data-view="book">Books</button>
-        <button class="nav-item" data-view="manga">Manga</button>
-        <button class="nav-item" data-view="comic">Comics</button>
-        <button class="nav-item" data-view="audiobook">Audiobooks</button>
+      <nav aria-label="Library categories">
+        <button class="nav-item active" data-view="all" aria-pressed="true">Library</button>
+        <button class="nav-item" data-view="book" aria-pressed="false">Books</button>
+        <button class="nav-item" data-view="manga" aria-pressed="false">Manga</button>
+        <button class="nav-item" data-view="comic" aria-pressed="false">Comics</button>
+        <button class="nav-item" data-view="audiobook" aria-pressed="false">Audiobooks</button>
       </nav>
       <div class="sidebar-note">
         <strong>Synthetic Preview</strong>
@@ -39,16 +39,16 @@
             <span class="sr-only">Search library</span>
             <input id="searchInput" type="search" placeholder="Search titles, creators, series…" autocomplete="off">
           </label>
-          <button id="importButton" class="primary">Import</button>
+          <button id="importButton" class="primary" aria-describedby="foundationLimit">Import</button>
         </div>
       </header>
 
       <section class="notice" aria-label="Foundation status">
         <div>
           <strong>Synthetic Preview</strong>
-          <span>Reader UI foundation only. Real import, reading, playback, sync, and downloads remain unavailable.</span>
+          <span id="foundationLimit">Reader UI foundation only. Real import, reading, playback, sync, and downloads remain unavailable.</span>
         </div>
-        <span class="status-chip">0.0.1-foundation</span>
+        <span class="status-chip">0.0.4-foundation</span>
       </section>
 
       <section class="resume-section" aria-labelledby="resumeHeading">
@@ -58,7 +58,7 @@
         <div id="continueRail" class="continue-rail"></div>
       </section>
 
-      <section id="library" aria-labelledby="libraryHeading">
+      <section id="library" aria-labelledby="libraryHeading" tabindex="-1">
         <div class="section-heading">
           <div><p class="eyebrow">Collection</p><h2 id="libraryHeading">All media</h2></div>
           <div id="resultCount" class="result-count" aria-live="polite"></div>
@@ -72,7 +72,7 @@
     </main>
   </div>
 
-  <dialog id="detailDialog" class="detail-dialog">
+  <dialog id="detailDialog" class="detail-dialog" aria-labelledby="detailTitle">
     <button id="closeDialog" class="dialog-close" aria-label="Close details">×</button>
     <div id="detailContent"></div>
   </dialog>

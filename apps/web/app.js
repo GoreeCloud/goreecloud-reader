@@ -24,6 +24,10 @@ const toast = document.querySelector('#toast');
 const kindLabel = (kind) => ({ book: 'Book', manga: 'Manga', comic: 'Comic', audiobook: 'Audiobook' }[kind]);
 const monogram = (title) => title.split(/\s+/).slice(0, 2).map(part => part[0]).join('').toUpperCase();
 const pct = (value) => `${Math.round(value * 100)}%`;
+const progressMarkup = (value) => {
+  const rounded = Math.round(value * 100);
+  return `<div class="progress-track" role="progressbar" aria-label="Progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${rounded}" aria-valuetext="${rounded}% complete"><div class="progress-fill" style="width:${rounded}%"></div></div>`;
+};
 
 function showToast(message) {
   toast.textContent = message;
@@ -77,7 +81,7 @@ function renderContinue() {
         <span class="meta">${item.kind === 'audiobook' ? 'Continue Listening' : 'Continue Reading'}</span>
         <strong>${item.title}</strong>
         <span class="meta">${pct(item.progress)} complete · synthetic</span>
-        <div class="progress-track" aria-label="${pct(item.progress)} complete"><div class="progress-fill" style="width:${pct(item.progress)}"></div></div>
+        ${progressMarkup(item.progress)}
       </div>`;
     return card;
   }));
@@ -91,10 +95,10 @@ function openDetail(item) {
     </div>
     <div class="detail-body">
       <p class="eyebrow">${kindLabel(item.kind)} · Preview data</p>
-      <h2>${item.title}</h2>
+      <h2 id="detailTitle">${item.title}</h2>
       <p class="meta">${item.creator}${item.series ? ` · ${item.series}` : ''}</p>
       <p style="margin-top:16px">This record exists only to exercise the Reader foundation interface. No real media resource is attached.</p>
-      <div class="progress-track" aria-label="${pct(item.progress)} complete"><div class="progress-fill" style="width:${pct(item.progress)}"></div></div>
+      ${progressMarkup(item.progress)}
       <div class="detail-actions">
         <button class="primary" data-unavailable>${action}</button>
         <button class="secondary" data-unavailable>Download</button>
@@ -106,8 +110,11 @@ function openDetail(item) {
 
 document.querySelectorAll('.nav-item').forEach(button => {
   button.addEventListener('click', () => {
-    document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
-    button.classList.add('active');
+    document.querySelectorAll('.nav-item').forEach(item => {
+      const active = item === button;
+      item.classList.toggle('active', active);
+      item.setAttribute('aria-pressed', String(active));
+    });
     activeKind = button.dataset.view;
     document.querySelector('#libraryHeading').textContent = activeKind === 'all' ? 'All media' : `${kindLabel(activeKind)}s`;
     renderLibrary();

@@ -36,6 +36,37 @@ jobs:
           grep -q "license: AGPL-3.0-or-later" goreecloud.platform.yaml
           grep -q "result: applicable-migration-required" goreecloud.platform.yaml
 
+  web-rendered-acceptance:
+    runs-on: ubuntu-latest
+    env:
+      READER_SOURCE_REVISION: ${{ github.event.pull_request.head.sha || github.sha }}
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ env.READER_SOURCE_REVISION }}
+      - name: Verify exact source revision
+        run: test "$(git rev-parse HEAD)" = "$READER_SOURCE_REVISION"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install pinned web test dependencies
+        working-directory: apps/web
+        run: npm install --ignore-scripts --no-audit --no-fund
+      - name: Install browser engines
+        working-directory: apps/web
+        run: npx playwright install --with-deps chromium firefox webkit
+      - name: Run rendered web verification
+        working-directory: apps/web
+        run: npm run test:rendered
+      - name: Upload rendered web evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: goreecloud-reader-web-rendered-${{ env.READER_SOURCE_REVISION }}
+          path: apps/web/test-results
+          if-no-files-found: warn
+          retention-days: 14
+
   android-debug-build:
     runs-on: ubuntu-latest
     env:
