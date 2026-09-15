@@ -29,6 +29,7 @@ const expected = {
   tagObjectSha: 'f020fdc8a39de442f9fdfb405d658259c52b99df',
   stableSourceCommit: 'ff34f232f295c9dcb07e4c681f66d4104d0b9323',
   canonicalConsumerRegistration: 'GoreeCloud/goreecloud-glaze-ui#178@8354308445da9ac35ced2b37a7f503a08a0aaf72:adoption-required',
+  currentStableRequired: '1.4.1',
 };
 
 requireCheck(contract.schemaVersion === 1, 'Glaze adoption contract schemaVersion must be 1');
@@ -79,12 +80,12 @@ requireCheck(contract.automatedWebEvidence?.limitations?.includes('production-ap
 
 requireCheck(platform.includes("version: '0.0.4-foundation'"), 'Platform Contract version must match the 0.0.4 foundation milestone');
 requireCheck(platform.includes('result: applicable-migration-required'), 'Glaze platform result must remain applicable-migration-required');
-requireCheck(platform.includes('version: 1.3.0'), 'Glaze platform version must remain 1.3.0');
-requireCheck(platform.includes('glaze_ui_required: 1.3.0'), 'compatibility Glaze requirement must remain 1.3.0');
-requireCheck(platform.includes('glaze-ui==1.3.0'), 'platform dependency must remain glaze-ui==1.3.0');
+requireCheck(platform.includes("version: '1.3.0'"), 'Glaze implementation version must remain the verified 1.3.0 source integration until migration occurs');
+requireCheck(platform.includes(`glaze_ui_required: '${expected.currentStableRequired}'`), `compatibility Glaze requirement must target current Stable ${expected.currentStableRequired}`);
+requireCheck(platform.includes(`glaze-ui==${expected.currentStableRequired}`), `platform dependency must require current Stable ${expected.currentStableRequired}`);
 requireCheck(platform.includes(contractPath), 'Platform Contract must cite the repository-local Glaze adoption contract');
-requireCheck(platform.includes('Current Glaze UI consumer acceptance is not established.'), 'Platform Contract must preserve the Glaze acceptance blocker');
-requireCheck(platform.includes('apps/web/tests/glaze-rendered.spec.mjs'), 'Platform Contract must cite rendered-web test evidence');
+requireCheck(platform.includes('Current Stable Glaze UI 1.4.1 migration and consumer acceptance are not established.'), 'Platform Contract must preserve the current-Stable Glaze migration and acceptance blocker');
+requireCheck(platform.includes('apps/web/tests/glaze-rendered.spec.mjs'), 'Platform Contract must cite rendered-web source evidence');
 
 requireCheck(adoption.includes('GLAZE UI V1.3'), 'adoption record must identify GLAZE UI V1.3');
 requireCheck(adoption.includes(expected.version), 'adoption record must identify version 1.3.0');
@@ -126,12 +127,13 @@ requireCheck(android.includes('AssistChip'), 'Android foundation must preserve n
 requireCheck(android.includes('Synthetic Preview · No personal media is loaded or transmitted.'), 'Android foundation must preserve the explicit synthetic-data boundary');
 
 if (errors.length) {
-  console.error('Reader Glaze UI V1.3 adoption validation FAILED:');
+  console.error('Reader Glaze UI V1.3 source-adoption validation FAILED:');
   for (const error of errors) console.error(`- ${error}`);
   process.exit(1);
 }
 
-console.log(`Reader Glaze UI adoption: PASS (${expected.tag} / ${expected.stableSourceCommit})`);
+console.log(`Reader Glaze UI source adoption: PASS (${expected.tag} / ${expected.stableSourceCommit})`);
+console.log(`Current Stable Glaze requirement: ${expected.currentStableRequired} (migration required)`);
 console.log(`Canonical consumer registration: PASS (${expected.canonicalConsumerRegistration})`);
 console.log('Automated rendered-web verification is configured for the synthetic foundation.');
-console.log('Formal rendered/accessibility/task-flow/production acceptance remains fail-closed.');
+console.log('Current-Stable migration, formal accessibility/task-flow/production acceptance remain fail-closed.');
