@@ -1,4 +1,4 @@
-schema_version: '0.2'
+schema_version: '0.3'
 component:
   type: application
   id: goreecloud-reader
@@ -70,6 +70,13 @@ platform_systems:
     - SPECIFICATIONS.md
     - SECURITY.md
     notes: Account, profile, authorization, session, and device integration are planned but absent from the foundation.
+  sync:
+    result: applicable-blocked
+    version: null
+    evidence:
+    - SPECIFICATIONS.md
+    - FEATURE-ROADMAP.md
+    notes: Cross-device progress, annotations, preferences, shelves, and applicable offline continuity are planned, but no accepted GoreeCloud Sync dataset contract or runtime reconciliation evidence is established.
 health:
   health_endpoint: null
   readiness_endpoint: null
@@ -108,10 +115,10 @@ external_dependencies:
   required: false
   version_constraint: '==4.13.0'
 compatibility:
-  platform_contract: '0.2'
+  platform_contract: '0.3'
   glaze_ui_required: '1.4.1'
   requires:
-  - goreecloud-platform-contract==0.2
+  - goreecloud-platform-contract==0.3
   - glaze-ui==1.4.1
   provides:
   - goreecloud-reader-web-foundation
@@ -135,7 +142,7 @@ conformance:
   - privacy/privacy-shield.application-manifest.json
   blockers:
   - Real personal-library ingestion, persistence, reading, and audiobook playback are not implemented.
-  - Runtime Privacy Shield, Wardveil Security, Everkeep, GoreeCloud Identity, GoreeCloud Mesh, and GoreeCloud Manager integrations are incomplete.
+  - Runtime Privacy Shield, Wardveil Security, Everkeep, GoreeCloud Identity, GoreeCloud Mesh, GoreeCloud Sync, and GoreeCloud Manager integrations are incomplete.
   - Current Stable Glaze UI 1.4.1 migration and consumer acceptance are not established.
   - Manual assistive-technology, Android physical-device, rollback, and production acceptance are incomplete.
   - Production deployment, recovery acceptance, and exact release evidence are incomplete.
