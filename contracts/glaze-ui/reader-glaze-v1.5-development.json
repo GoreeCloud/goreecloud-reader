@@ -1,0 +1,84 @@
+{
+  "schemaVersion": 1,
+  "documentVersion": "1.0",
+  "recordType": "goreecloud-reader-glaze-v1.5-development-integration",
+  "consumer": {
+    "name": "GoreeCloud Reader",
+    "repository": "GoreeCloud/goreecloud-reader",
+    "foundationVersion": "0.0.4-foundation",
+    "lifecycle": "development",
+    "supportedSurfaces": ["web", "android"]
+  },
+  "glazeUi": {
+    "canonicalRepository": "GoreeCloud/goreecloud-glaze-ui",
+    "implementedSourceMapping": "1.3.0",
+    "requiredStableConsumerTarget": "1.4.1",
+    "developmentVersion": "1.5.0-dev.1",
+    "developmentRevision": "e7c397837908e4644d6230f17d0f73e84e3d1558",
+    "developmentEntrypoint": "js/glaze-v1.5-resolution.dev.mjs",
+    "providerRegistryEntrypoint": "js/glaze-v1.5-provider-registry.dev.mjs",
+    "sharedRepresentativeProfile": "goreecloud-reader-offline"
+  },
+  "integrationBoundary": {
+    "developmentOnly": true,
+    "testOnly": true,
+    "runtimeDependencyAdded": false,
+    "platformManifestStableTargetChanged": false,
+    "currentStableMigrationCompleted": false,
+    "consumerAcceptanceEstablished": false,
+    "releaseCandidateQualified": false,
+    "stableQualified": false,
+    "productionEligible": false
+  },
+  "authorityBoundary": {
+    "glazeAuthority": "presentation-only",
+    "privacyAuthority": "Privacy Shield",
+    "securityAuthority": "Wardveil Security",
+    "identityAuthority": "GoreeCloud Identity",
+    "coordinationAuthority": "GoreeCloud Mesh",
+    "continuityAuthority": "Everkeep",
+    "administrationAuthority": "GoreeCloud Manager",
+    "authorizationMayBeInferredByGlaze": false,
+    "providerPrecedenceMayBeInferredByGlaze": false,
+    "permissionMayBeGrantedByGlaze": false,
+    "consequentialExecutionMayBeAutomatic": false,
+    "fallbackExecutionMayBeAutomatic": false
+  },
+  "validation": {
+    "exactReaderRevisionRequired": true,
+    "exactGlazeDevelopmentRevisionRequired": true,
+    "upstreamRepresentativeProfileRequired": true,
+    "scenarios": [
+      "reader.v1.5.shared-offline-profile",
+      "reader.v1.5.online-sync-available",
+      "reader.v1.5.duplicate-sync-authority-fails-closed",
+      "reader.v1.5.privacy-permission-remains-user-initiated"
+    ],
+    "requiredProperties": [
+      "local-reading-remains-available-offline",
+      "offline-sync-remains-visible-but-disabled",
+      "offline-sync-may-suggest-local-reading-without-automatic-fallback",
+      "online-sync-may-become-invocable-only-from-authoritative-service-state",
+      "duplicate-capability-ownership-fails-closed-without-provider-precedence",
+      "privacy-owned-authorization-remains-permission-gated",
+      "permission-recovery-remains-user-initiated",
+      "diagnostics-omit-provider-identity-and-raw-context",
+      "task-state-is-not-reset-by-capability-presentation",
+      "telemetry-and-remote-analysis-are-not-required"
+    ]
+  },
+  "acceptance": {
+    "repositoryLocalDevelopmentContractPresent": true,
+    "repositoryLocalDevelopmentValidationRequired": true,
+    "renderedV15Acceptance": false,
+    "androidNativeV15Acceptance": false,
+    "androidPhysicalDeviceV15Acceptance": false,
+    "assistiveTechnologyV15Acceptance": false,
+    "representativeTaskFlowV15Acceptance": false,
+    "privacyReviewV15Acceptance": false,
+    "performanceV15Acceptance": false,
+    "repositoryLocalConsumerAcceptance": false,
+    "productionAcceptance": false
+  },
+  "notes": "This record exercises the non-consumer-eligible Glaze UI 1.5.0-dev.1 resolver against Reader semantics without changing Reader's current Stable requirement. It is Development compatibility evidence only and cannot be used as current-Stable Glaze conformance, Reader production acceptance, Release Candidate qualification, or Stable qualification."
+}
