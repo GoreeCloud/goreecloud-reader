@@ -145,7 +145,7 @@ onlineInput.providers.find(provider => provider.id === 'reader-platform').contex
 onlineInput.providers.find(provider => provider.id === 'reader-sync-service').capabilities[0].state = 'available';
 const online = resolveGlazeInterface(onlineInput);
 assertGlobalBoundaries(online);
-assert.equal(online.composition.connectivityPresentation, 'online');
+assert.equal(online.composition.connectivityPresentation, 'normal');
 const onlineSync = online.actions.actions.find(item => item.id === 'sync-library');
 assert.equal(onlineSync.enabled, true);
 assert.equal(onlineSync.state, 'available');
