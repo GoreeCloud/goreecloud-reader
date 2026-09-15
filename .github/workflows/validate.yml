@@ -29,12 +29,13 @@ jobs:
         run: node scripts/validate-privacy-boundary.mjs
       - name: Validate Glaze UI adoption boundary
         run: node scripts/validate-glaze-adoption.mjs
-      - name: Validate truthful platform status
+      - name: Validate truthful platform status and repository license
         run: |
           grep -q "lifecycle: development" goreecloud.platform.yaml
           grep -q "status: nonconformant" goreecloud.platform.yaml
-          grep -q "license: AGPL-3.0-or-later" goreecloud.platform.yaml
+          grep -q "SPDX-License-Identifier: AGPL-3.0-or-later" LICENSE
           grep -q "result: applicable-migration-required" goreecloud.platform.yaml
+          grep -q "glaze_ui_required: '1.4.1'" goreecloud.platform.yaml
 
   web-rendered-acceptance:
     runs-on: ubuntu-latest
