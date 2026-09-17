@@ -29,12 +29,75 @@ jobs:
         run: node scripts/validate-privacy-boundary.mjs
       - name: Validate Glaze UI adoption boundary
         run: node scripts/validate-glaze-adoption.mjs
-      - name: Validate truthful platform status
+      - name: Validate truthful current Platform and Glaze target
         run: |
+          set -euo pipefail
+          grep -q "schema_version: '0.2'" goreecloud.platform.yaml
+          grep -q "platform_contract: '0.2'" goreecloud.platform.yaml
           grep -q "lifecycle: development" goreecloud.platform.yaml
           grep -q "status: nonconformant" goreecloud.platform.yaml
-          grep -q "license: AGPL-3.0-or-later" goreecloud.platform.yaml
+          grep -q "SPDX-License-Identifier: AGPL-3.0-or-later" LICENSE
           grep -q "result: applicable-migration-required" goreecloud.platform.yaml
+          grep -q "glaze_ui_required: '1.5.1'" goreecloud.platform.yaml
+          if grep -q "^  sync:" goreecloud.platform.yaml; then
+            echo "GoreeCloud Sync must not be represented as an eighth Integral Platform System" >&2
+            exit 1
+          fi
+          grep -q "GoreeCloud Sync remains a separately governed application/service capability" goreecloud.platform.yaml
+
+  glaze-v1-5-development-regression:
+    name: Validate historical Reader Glaze V1.5 Development regression
+    runs-on: ubuntu-latest
+    env:
+      READER_SOURCE_REVISION: ${{ github.event.pull_request.head.sha || github.sha }}
+      GLAZE_V15_REVISION: e7c397837908e4644d6230f17d0f73e84e3d1558
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ env.READER_SOURCE_REVISION }}
+      - name: Verify exact Reader source revision
+        run: test "$(git rev-parse HEAD)" = "$READER_SOURCE_REVISION"
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+      - name: Fetch exact historical Glaze V1.5 Development revision
+        run: |
+          GLAZE_V15_ROOT="$RUNNER_TEMP/goreecloud-glaze-ui-v1.5-development"
+          git init "$GLAZE_V15_ROOT"
+          git -C "$GLAZE_V15_ROOT" remote add origin https://github.com/GoreeCloud/goreecloud-glaze-ui.git
+          git -C "$GLAZE_V15_ROOT" fetch --depth=1 origin "$GLAZE_V15_REVISION"
+          git -C "$GLAZE_V15_ROOT" checkout --detach FETCH_HEAD
+          test "$(git -C "$GLAZE_V15_ROOT" rev-parse HEAD)" = "$GLAZE_V15_REVISION"
+          echo "GLAZE_V15_ROOT=$GLAZE_V15_ROOT" >> "$GITHUB_ENV"
+      - name: Validate repository-local historical Glaze V1.5 Development compatibility
+        run: node scripts/validate-glaze-v1.5-development.mjs
+
+  glaze-v1-5-1-stable-compatibility:
+    name: Validate Reader Glaze V1.5.1 Stable compatibility
+    runs-on: ubuntu-latest
+    env:
+      READER_SOURCE_REVISION: ${{ github.event.pull_request.head.sha || github.sha }}
+      GLAZE_V151_REVISION: 98da57064ede0f334627b632bc16801f580331af
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ env.READER_SOURCE_REVISION }}
+      - name: Verify exact Reader source revision
+        run: test "$(git rev-parse HEAD)" = "$READER_SOURCE_REVISION"
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+      - name: Fetch exact current Stable Glaze V1.5.1 revision
+        run: |
+          GLAZE_V151_ROOT="$RUNNER_TEMP/goreecloud-glaze-ui-v1.5.1-stable"
+          git init "$GLAZE_V151_ROOT"
+          git -C "$GLAZE_V151_ROOT" remote add origin https://github.com/GoreeCloud/goreecloud-glaze-ui.git
+          git -C "$GLAZE_V151_ROOT" fetch --depth=1 origin "$GLAZE_V151_REVISION"
+          git -C "$GLAZE_V151_ROOT" checkout --detach FETCH_HEAD
+          test "$(git -C "$GLAZE_V151_ROOT" rev-parse HEAD)" = "$GLAZE_V151_REVISION"
+          echo "GLAZE_V151_ROOT=$GLAZE_V151_ROOT" >> "$GITHUB_ENV"
+      - name: Validate repository-local Glaze V1.5.1 Stable compatibility
+        run: node scripts/validate-glaze-v1.5.1-stable.mjs
 
   web-rendered-acceptance:
     runs-on: ubuntu-latest
@@ -102,3 +165,9 @@ jobs:
           path: apps/android/app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
           retention-days: 14
+
+  platform-contract:
+    name: Validate exact GoreeCloud Platform Contract
+    uses: GoreeCloud/GoreeCloud/.github/workflows/reusable-platform-manifest.yml@981c5807f249955e9f2c6c5d9136c9ed9c8017e9
+    with:
+      manifest-path: goreecloud.platform.yaml
