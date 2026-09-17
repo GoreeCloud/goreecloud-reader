@@ -12,7 +12,8 @@ const clone = value => JSON.parse(JSON.stringify(value));
 const expected = Object.freeze({
   readerRepository: 'GoreeCloud/goreecloud-reader',
   implementedSourceMapping: '1.3.0',
-  stableTarget: '1.4.1',
+  historicalStableBaseline: '1.4.1',
+  currentStableTarget: '1.5.1',
   developmentVersion: '1.5.0-dev.1',
   developmentRevision: 'e7c397837908e4644d6230f17d0f73e84e3d1558',
   sharedProfileId: 'goreecloud-reader-offline'
@@ -23,10 +24,10 @@ const v13Contract = json('contracts/glaze-ui/reader-glaze-v1.3.json');
 const platform = read('goreecloud.platform.yaml');
 const glazeRoot = String(process.env.GLAZE_V15_ROOT || '').trim();
 
-assert.ok(glazeRoot, 'GLAZE_V15_ROOT must point to the exact Glaze UI V1.5 Development checkout');
+assert.ok(glazeRoot, 'GLAZE_V15_ROOT must point to the exact historical Glaze UI V1.5 Development checkout');
 assert.ok(fs.existsSync(glazeRoot), `GLAZE_V15_ROOT does not exist: ${glazeRoot}`);
 const upstreamRevision = execFileSync('git', ['-C', glazeRoot, 'rev-parse', 'HEAD'], {encoding: 'utf8'}).trim();
-assert.equal(upstreamRevision, expected.developmentRevision, 'Glaze V1.5 checkout must match the exact governed Development revision');
+assert.equal(upstreamRevision, expected.developmentRevision, 'Historical Glaze V1.5 checkout must match the exact governed Development revision');
 
 assert.equal(contract.schemaVersion, 1);
 assert.equal(contract.documentVersion, '1.0');
@@ -35,7 +36,7 @@ assert.equal(contract.consumer?.repository, expected.readerRepository);
 assert.equal(contract.consumer?.lifecycle, 'development');
 assert.equal(contract.glazeUi?.canonicalRepository, 'GoreeCloud/goreecloud-glaze-ui');
 assert.equal(contract.glazeUi?.implementedSourceMapping, expected.implementedSourceMapping);
-assert.equal(contract.glazeUi?.requiredStableConsumerTarget, expected.stableTarget);
+assert.equal(contract.glazeUi?.requiredStableConsumerTarget, expected.historicalStableBaseline, 'Historical Development record must retain the Stable baseline that governed when it was created');
 assert.equal(contract.glazeUi?.developmentVersion, expected.developmentVersion);
 assert.equal(contract.glazeUi?.developmentRevision, expected.developmentRevision);
 assert.equal(contract.glazeUi?.sharedRepresentativeProfile, expected.sharedProfileId);
@@ -62,21 +63,21 @@ assert.equal(v13Contract.glazeUi?.version, expected.implementedSourceMapping, 'R
 assert.equal(v13Contract.acceptance?.productionEligible, false, 'Reader V1.3 source mapping must remain non-production evidence');
 assert.match(platform, /result:\s*applicable-migration-required/);
 assert.match(platform, /version:\s*'1\.3\.0'/);
-assert.match(platform, /glaze_ui_required:\s*'1\.4\.1'/);
-assert.ok(platform.includes('glaze-ui==1.4.1'), 'Platform dependency must keep the current Stable Glaze target at 1.4.1');
-assert.ok(!platform.includes("glaze_ui_required: '1.5.0-dev.1'"), 'Development V1.5 must never become the Stable compatibility requirement');
-assert.ok(!platform.includes('glaze-ui==1.5.0-dev.1'), 'Development V1.5 must never become the production Glaze dependency');
+assert.match(platform, /glaze_ui_required:\s*'1\.5\.1'/);
+assert.ok(platform.includes('glaze-ui==1.5.1'), 'Platform dependency must use the current Stable Glaze target 1.5.1');
+assert.ok(!platform.includes("glaze_ui_required: '1.5.0-dev.1'"), 'Historical Development V1.5 must never become the Stable compatibility requirement');
+assert.ok(!platform.includes('glaze-ui==1.5.0-dev.1'), 'Historical Development V1.5 must never become the production Glaze dependency');
 
 const upstreamRegistry = JSON.parse(fs.readFileSync(path.join(glazeRoot, 'registry/development/glaze-v1.5.0-dev.1.json'), 'utf8'));
 const representativeConsumers = JSON.parse(fs.readFileSync(path.join(glazeRoot, 'contracts/v1.5/representative-consumers.dev.json'), 'utf8'));
 assert.equal(upstreamRegistry.version, expected.developmentVersion);
 assert.equal(upstreamRegistry.lifecycle, 'development');
 assert.equal(upstreamRegistry.consumerEligible, false);
-assert.equal(upstreamRegistry.stableBaseline, expected.stableTarget);
+assert.equal(upstreamRegistry.stableBaseline, expected.historicalStableBaseline);
 assert.equal(upstreamRegistry.representativeConsumerAcceptanceEstablished, false);
 assert.equal(upstreamRegistry.representativeConsumerIntegrationChangesStableTarget, false);
 assert.equal(upstreamRegistry.privacyAuthorityMayOwnAuthorizationTruth, true);
-assert.equal(representativeConsumers.stableConsumerTarget, expected.stableTarget);
+assert.equal(representativeConsumers.stableConsumerTarget, expected.historicalStableBaseline);
 assert.equal(representativeConsumers.developmentOnly, true);
 assert.equal(representativeConsumers.consumerAcceptanceEstablished, false);
 assert.equal(representativeConsumers.repositoryLocalAcceptanceRequired, true);
@@ -94,7 +95,7 @@ assert.equal(readerProfile.repository, expected.readerRepository);
 function assertGlobalBoundaries(result) {
   assert.equal(result.version, expected.developmentVersion);
   assert.equal(result.lifecycle, 'development');
-  assert.equal(result.stableBaseline, expected.stableTarget);
+  assert.equal(result.stableBaseline, expected.historicalStableBaseline);
   assert.equal(result.authority.glazeAuthority, 'presentation-only');
   assert.equal(result.authority.authorizationInferred, false);
   assert.equal(result.authority.permissionGranted, false);
@@ -116,7 +117,6 @@ function assertGlobalBoundaries(result) {
   assert.equal(result.diagnostics.privacy.providerIdentityIncluded, false);
 }
 
-// Scenario 1: canonical shared Reader offline profile remains compatible in the actual Reader repository.
 const offline = resolveGlazeInterface(clone(readerProfile.input));
 assertGlobalBoundaries(offline);
 assert.equal(offline.composition.paneMode, 'multi-pane');
@@ -139,7 +139,6 @@ assert.equal(offlineSync.suggestedFallbackActionId, 'continue-reading');
 assert.equal(offlineSync.automaticExecutionAllowed, false);
 assert.equal(offline.actions.fallbackExecutionAutomatic, false);
 
-// Scenario 2: online state may enable synchronization only when the authoritative service provider declares it available.
 const onlineInput = clone(readerProfile.input);
 onlineInput.providers.find(provider => provider.id === 'reader-platform').context.connectivity.class = 'online';
 onlineInput.providers.find(provider => provider.id === 'reader-sync-service').capabilities[0].state = 'available';
@@ -153,7 +152,6 @@ assert.equal(online.capabilities.byId['service.library-sync'].provenance.authori
 assert.equal(onlineSync.automaticExecutionAllowed, false);
 assert.equal(online.actions.fallbackExecutionAutomatic, false);
 
-// Scenario 3: duplicate sync authority is not resolved by hidden provider precedence; it fails closed.
 const conflictInput = clone(onlineInput);
 conflictInput.providers.push({
   id: 'reader-secondary-sync-service',
@@ -170,7 +168,6 @@ assert.equal(conflictedSync.state, 'unknown');
 assert.ok(conflictedSync.reasonCodes.includes('capability-unknown'));
 assert.equal(conflict.authority.providerPrecedenceInferred, false);
 
-// Scenario 4: Privacy Shield may supply privacy-owned authorization truth, but Glaze cannot grant it.
 const privacyInput = clone(readerProfile.input);
 privacyInput.providers.push({
   id: 'privacy-shield',
@@ -204,10 +201,10 @@ assert.equal(privacyDiagnostic.authority, 'privacy');
 assert.equal(privacyDiagnostic.providerIdentityIncluded, false);
 assert.equal(JSON.stringify(privacy.diagnostics).includes('privacy-shield'), false);
 
-console.log('GoreeCloud Reader / GLAZE UI 1.5.0-dev.1 repository-local Development integration: PASS');
-console.log(`Reader exact upstream Glaze revision: ${expected.developmentRevision}`);
-console.log('Reader Development scenarios: 4');
-console.log(`Current Stable consumer target remains: ${expected.stableTarget}`);
+console.log('GoreeCloud Reader / historical GLAZE UI 1.5.0-dev.1 repository-local Development regression: PASS');
+console.log(`Historical exact upstream Glaze Development revision: ${expected.developmentRevision}`);
+console.log('Historical Reader Development scenarios: 4');
+console.log(`Historical V1.5 Development Stable baseline: ${expected.historicalStableBaseline}`);
+console.log(`Current Stable consumer target is independently reconciled to: ${expected.currentStableTarget}`);
 console.log(`Implemented Reader Glaze source mapping remains: ${expected.implementedSourceMapping}`);
-console.log('Reader V1.5 consumer acceptance established: false');
-console.log('Reader Release Candidate / Stable / production acceptance established: false');
+console.log('Reader V1.5 consumer acceptance established by historical regression: false');
