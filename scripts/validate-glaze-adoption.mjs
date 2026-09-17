@@ -12,7 +12,9 @@ const requireCheck = (condition, message) => {
 };
 
 const contractPath = 'contracts/glaze-ui/reader-glaze-v1.3.json';
+const stableCompatibilityPath = 'contracts/glaze-ui/reader-glaze-v1.5.1-stable.json';
 const contract = json(contractPath);
+const stableCompatibility = json(stableCompatibilityPath);
 const platform = read('goreecloud.platform.yaml');
 const adoption = read('docs/GLAZE-UI-ADOPTION.md');
 const css = read('apps/web/app.css');
@@ -29,7 +31,9 @@ const expected = {
   tagObjectSha: 'f020fdc8a39de442f9fdfb405d658259c52b99df',
   stableSourceCommit: 'ff34f232f295c9dcb07e4c681f66d4104d0b9323',
   canonicalConsumerRegistration: 'GoreeCloud/goreecloud-glaze-ui#178@8354308445da9ac35ced2b37a7f503a08a0aaf72:adoption-required',
-  currentStableRequired: '1.4.1',
+  currentStableRequired: '1.5.1',
+  currentStableRevision: '98da57064ede0f334627b632bc16801f580331af',
+  platformContract: '0.2',
 };
 
 requireCheck(contract.schemaVersion === 1, 'Glaze adoption contract schemaVersion must be 1');
@@ -49,8 +53,8 @@ for (const [key, value] of Object.entries({
 }
 requireCheck(contract.glazeUi?.repository === 'GoreeCloud/goreecloud-glaze-ui', 'Glaze source repository must remain canonical');
 requireCheck(contract.glazeUi?.contract === 'GLAZE_UI_V1_3.md', 'Glaze contract must be GLAZE_UI_V1_3.md');
-requireCheck(contract.glazeUi?.webEntrypoint === 'css/glaze-v1.3.0.css', 'Glaze Stable web entrypoint must be pinned');
-requireCheck(contract.glazeUi?.runtimeEntrypoint === 'js/glaze-v1.3.0.mjs', 'Glaze Stable runtime entrypoint must be pinned');
+requireCheck(contract.glazeUi?.webEntrypoint === 'css/glaze-v1.3.0.css', 'Glaze historical web entrypoint must remain pinned');
+requireCheck(contract.glazeUi?.runtimeEntrypoint === 'js/glaze-v1.3.0.mjs', 'Glaze historical runtime entrypoint must remain pinned');
 
 requireCheck(contract.status === 'adoption-in-progress', 'Reader must remain adoption-in-progress until independent acceptance exists');
 requireCheck(contract.acceptance?.canonicalConsumerRegistration === expected.canonicalConsumerRegistration, 'canonical Glaze consumer registration must stay pinned to verified PR #178 merge revision and adoption-required status');
@@ -69,6 +73,17 @@ for (const gate of [
   requireCheck(contract.acceptance?.[gate] === false, `${gate} must fail closed until independently accepted`);
 }
 
+requireCheck(stableCompatibility.recordType === 'goreecloud-reader-glaze-v1.5.1-stable-compatibility', 'current Stable compatibility record must be present');
+requireCheck(stableCompatibility.glazeUi?.implementedSourceMapping === expected.version, 'Stable compatibility record must preserve implemented V1.3 source truth');
+requireCheck(stableCompatibility.glazeUi?.requiredStableConsumerTarget === expected.currentStableRequired, 'Stable compatibility record must target current Stable 1.5.1');
+requireCheck(stableCompatibility.glazeUi?.stableRevision === expected.currentStableRevision, 'Stable compatibility record must pin exact current Stable Glaze source');
+requireCheck(stableCompatibility.integrationBoundary?.currentStableSourceMigrationCompleted === false, 'Stable compatibility must not claim substantive source migration');
+requireCheck(stableCompatibility.integrationBoundary?.consumerAcceptanceEstablished === false, 'Stable compatibility must not claim consumer acceptance');
+requireCheck(stableCompatibility.integrationBoundary?.productionEligible === false, 'Stable compatibility must not claim production eligibility');
+requireCheck(stableCompatibility.platformContract?.version === expected.platformContract, 'Stable compatibility record must use Platform Contract 0.2');
+requireCheck(stableCompatibility.platformContract?.integralPlatformSystemCount === 7, 'Stable compatibility record must preserve exactly seven Integral Platform Systems');
+requireCheck(stableCompatibility.platformContract?.syncIsIntegralPlatformSystem === false, 'Stable compatibility record must keep GoreeCloud Sync outside Integral Platform Systems');
+
 requireCheck(contract.automatedWebEvidence?.configured === true, 'automated rendered-web evidence harness must be configured');
 requireCheck(contract.automatedWebEvidence?.scope === 'synthetic-foundation-only', 'automated web evidence scope must remain synthetic-foundation-only');
 requireCheck(JSON.stringify(contract.automatedWebEvidence?.engines) === JSON.stringify(['chromium', 'firefox', 'webkit']), 'automated web engine matrix must cover Chromium, Firefox, and WebKit');
@@ -79,23 +94,33 @@ requireCheck(contract.automatedWebEvidence?.limitations?.includes('manual-assist
 requireCheck(contract.automatedWebEvidence?.limitations?.includes('production-approval'), 'production approval limitation must remain explicit');
 
 requireCheck(platform.includes("version: '0.0.4-foundation'"), 'Platform Contract version must match the 0.0.4 foundation milestone');
+requireCheck(platform.includes("schema_version: '0.2'"), 'Reader must use current Platform Contract schema 0.2');
+requireCheck(platform.includes("platform_contract: '0.2'"), 'Reader compatibility must use current Platform Contract 0.2');
+requireCheck(platform.includes('goreecloud-platform-contract==0.2'), 'Reader dependency must use current Platform Contract 0.2');
+requireCheck(!/^  sync:/m.test(platform), 'GoreeCloud Sync must not be represented as an eighth Integral Platform System');
+requireCheck(platform.includes('GoreeCloud Sync remains a separately governed application/service capability'), 'Reader must preserve separate GoreeCloud Sync governance truth');
 requireCheck(platform.includes('result: applicable-migration-required'), 'Glaze platform result must remain applicable-migration-required');
 requireCheck(platform.includes("version: '1.3.0'"), 'Glaze implementation version must remain the verified 1.3.0 source integration until migration occurs');
 requireCheck(platform.includes(`glaze_ui_required: '${expected.currentStableRequired}'`), `compatibility Glaze requirement must target current Stable ${expected.currentStableRequired}`);
 requireCheck(platform.includes(`glaze-ui==${expected.currentStableRequired}`), `platform dependency must require current Stable ${expected.currentStableRequired}`);
-requireCheck(platform.includes(contractPath), 'Platform Contract must cite the repository-local Glaze adoption contract');
-requireCheck(platform.includes('Current Stable Glaze UI 1.4.1 migration and consumer acceptance are not established.'), 'Platform Contract must preserve the current-Stable Glaze migration and acceptance blocker');
+requireCheck(platform.includes(contractPath), 'Platform Contract must cite the repository-local Glaze V1.3 adoption contract');
+requireCheck(platform.includes(stableCompatibilityPath), 'Platform Contract must cite current Stable Glaze compatibility evidence');
+requireCheck(platform.includes('Current Stable Glaze UI 1.5.1 substantive source migration and consumer acceptance are not established.'), 'Platform Contract must preserve the current-Stable Glaze migration and acceptance blocker');
 requireCheck(platform.includes('apps/web/tests/glaze-rendered.spec.mjs'), 'Platform Contract must cite rendered-web source evidence');
 
-requireCheck(adoption.includes('GLAZE UI V1.3'), 'adoption record must identify GLAZE UI V1.3');
-requireCheck(adoption.includes(expected.version), 'adoption record must identify version 1.3.0');
+requireCheck(adoption.includes('GLAZE UI V1.3'), 'adoption record must identify implemented GLAZE UI V1.3');
+requireCheck(adoption.includes(expected.version), 'adoption record must identify implemented version 1.3.0');
 requireCheck(adoption.includes(expected.tag), 'adoption record must identify the immutable v1.3.0 tag');
-requireCheck(adoption.includes(expected.stableSourceCommit), 'adoption record must identify the exact Stable source commit');
-requireCheck(adoption.includes('8354308445da9ac35ced2b37a7f503a08a0aaf72'), 'adoption record must identify the accepted canonical consumer-registration merge revision');
-requireCheck(adoption.includes('adoption-required'), 'adoption record must preserve the canonical registration status');
+requireCheck(adoption.includes(expected.stableSourceCommit), 'adoption record must identify the exact historical V1.3 source commit');
+requireCheck(adoption.includes(expected.currentStableRequired), 'adoption record must identify current Stable 1.5.1');
+requireCheck(adoption.includes(expected.currentStableRevision), 'adoption record must identify exact current Stable 1.5.1 source revision');
+requireCheck(adoption.includes('8354308445da9ac35ced2b37a7f503a08a0aaf72'), 'adoption record must identify the accepted historical consumer-registration merge revision');
+requireCheck(adoption.includes('adoption-required'), 'adoption record must preserve current consumer-registration status');
 requireCheck(adoption.includes('Not accepted yet'), 'adoption record must explicitly say Reader is not accepted yet');
 requireCheck(adoption.includes('production eligibility remains false'), 'adoption record must preserve production ineligibility');
 requireCheck(adoption.includes('Chromium, Firefox, and WebKit'), 'adoption record must describe the three-engine rendered-web matrix');
+requireCheck(adoption.includes('exactly seven Integral Platform Systems'), 'adoption record must describe restored current Platform Contract authority');
+requireCheck(adoption.includes('GoreeCloud Sync is not an eighth Integral Platform System'), 'adoption record must preserve separate Sync governance');
 
 requireCheck(css.includes(':focus-visible'), 'web foundation must preserve visible keyboard focus');
 requireCheck(css.includes('prefers-reduced-motion: reduce'), 'web foundation must preserve reduced-motion behavior');
@@ -127,13 +152,14 @@ requireCheck(android.includes('AssistChip'), 'Android foundation must preserve n
 requireCheck(android.includes('Synthetic Preview · No personal media is loaded or transmitted.'), 'Android foundation must preserve the explicit synthetic-data boundary');
 
 if (errors.length) {
-  console.error('Reader Glaze UI V1.3 source-adoption validation FAILED:');
+  console.error('Reader Glaze UI adoption validation FAILED:');
   for (const error of errors) console.error(`- ${error}`);
   process.exit(1);
 }
 
-console.log(`Reader Glaze UI source adoption: PASS (${expected.tag} / ${expected.stableSourceCommit})`);
-console.log(`Current Stable Glaze requirement: ${expected.currentStableRequired} (migration required)`);
-console.log(`Canonical consumer registration: PASS (${expected.canonicalConsumerRegistration})`);
-console.log('Automated rendered-web verification is configured for the synthetic foundation.');
-console.log('Current-Stable migration, formal accessibility/task-flow/production acceptance remain fail-closed.');
+console.log(`Reader implemented Glaze source adoption: PASS (${expected.tag} / ${expected.stableSourceCommit})`);
+console.log(`Current Stable Glaze requirement: ${expected.currentStableRequired} @ ${expected.currentStableRevision} (migration required)`);
+console.log(`Current Platform Contract: ${expected.platformContract}; seven Integral Platform Systems; Sync separately governed.`);
+console.log(`Canonical historical consumer registration: PASS (${expected.canonicalConsumerRegistration})`);
+console.log('Automated rendered-web verification remains configured for the synthetic foundation.');
+console.log('Current-Stable source migration, formal accessibility/task-flow/production acceptance remain fail-closed.');
